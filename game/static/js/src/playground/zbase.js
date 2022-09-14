@@ -1,10 +1,14 @@
 class GamePlayground{
     constructor(root){
         this.root = root;
-        this.$playground = $(`<div>game</div>`);
+        this.$playground = $(`<div class="game-playground"></div>`);
 
-        this.hide();
+        //this.hide();
         this.root.$game.append(this.$playground);
+        this.width = this.$playground.width();
+        this.height = this.$playground.height();
+        this.game_map = new GameMap(this);
+
         this.start();
     }
 
