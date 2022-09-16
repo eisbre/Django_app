@@ -19,7 +19,7 @@ class GameObject {
     destroy(){
         this.on_destroy();
 
-        for(let i = 0;i < GAME_OBJECT.length;i ++){
+        for(let i = 0;i < GAME_OBJECTS.length;i ++){
             if(GAME_OBJECTS[i] === this){
                 GAME_OBJECTS.splice(i, 1);
                 break;
