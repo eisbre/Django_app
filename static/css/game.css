@@ -1,3 +1,13 @@
+.game-settings{
+    width: 100%;
+    height: 100%;
+    background-image: url("https://img.gejiba.com/images/dc6e123a401f6c1278852300f1615f77.jpg");
+    background-size: 100% 100%;
+    user-select: none;
+}
+
+
+
 .game-menu{
     width: 100%;
     height: 100%;
@@ -35,4 +45,114 @@
     width: 100%;
     height: 100%;
     user-select: none;
+}
+
+.game-settings-login{
+    height: 41vh;
+    width: 20vw;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+}
+
+.game-settings-register{
+    height: 49vh;
+    width: 20vw;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+}
+
+.game-settings-title{
+    color: white;
+    font-size: 3vh;
+    text-align: center;
+    padding-top: 2vh;
+    margin-bottom: 2vh;
+}
+
+.game-settings-username{
+    display: block;
+    height: 7vh;
+}
+
+.game-settings-password{
+    display: block;
+    height: 7vh;
+}
+
+.game-settings-submit{
+    display: block;
+    height: 7vh;
+}
+
+.game-settings-error-message{
+    color: red;
+    font-size: 0.8vh;
+    display: inline;
+    float: left;
+    padding-left: 1vw;
+}
+
+.game-settings-option{
+    color: white;
+    font-size: 2vh;
+    display: inline;
+    float: right;
+    padding-right: 1vw;
+    cursor: pointer;
+}
+
+.game-settings-item{
+    width: 100%;
+    height: 100%;
+}
+
+.game-settings-item > input{
+    width: 90%;
+    line-height: 3vh;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+}
+
+.game-settings-item > button{
+    color: white;
+    width: 90%;
+    line-height: 3vh;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color:#309804;
+    border-radius: 5px;
+}
+
+.game-settings-acwing{
+    display: block;
+    height: 7vh;
+}
+
+.game-settings-acwing > img{
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    display: block;
+}
+
+.game-settings-acwing > div{
+    font-size: 1.5vh;
+    color: white;
+    text-align: center;
+    display: block;
 }
