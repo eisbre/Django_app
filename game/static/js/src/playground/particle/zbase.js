@@ -12,7 +12,7 @@ class Particle extends GameObject {
         this.move_length = move_length;
         this.ctx = this.playground.game_map.ctx;
         this.friction = 0.9;
-        this.eps = 1;
+        this.eps = 0.01;
     }
 
     start(){
@@ -33,8 +33,9 @@ class Particle extends GameObject {
     }
 
     render(){
+        let scale = this.playground.scale;
         this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        this.ctx.arc(this.x * scale, this.y * scale, this.radius * scale, 0, Math.PI * 2, false);
         this.ctx.fillStyle = this.color;
         this.ctx.fill();
     }
