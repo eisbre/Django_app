@@ -1,5 +1,8 @@
 class Player extends GameObject {
     constructor(playground, x, y, radius, color, speed, character, username, photo){
+
+        console.log(character, username, photo);
+
         super();
         this.playground = playground;
         this.x = x;
@@ -32,7 +35,7 @@ class Player extends GameObject {
         if(this.character === "me"){
             this.add_listening_events();
         }
-        else{
+        else if (this.character === "robot"){
             let tx = Math.random() * this.playground.width / this.playground.scale;
             let ty = Math.random() * this.playground.height / this.playground.scale;
             this.move_to(tx, ty);

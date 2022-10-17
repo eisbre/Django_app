@@ -36,6 +36,7 @@ class GamePlayground{
     }
 
     show(mode){
+        let outer = this;
         this.$playground.show();
         this.width = this.$playground.width();
         this.height = this.$playground.height();
@@ -50,6 +51,11 @@ class GamePlayground{
             }
         }
         else if(mode === "multi mode"){
+            this.mps = new MultiPlayerSocket(this);
+            this.mps.uid = this.players[0].uid;
+            this.mps.ws.onopen = function(){
+                outer.mps.send_create_player(outer.root.settings.username, outer.root.settings.photo);
+            };
         }
 
     }
