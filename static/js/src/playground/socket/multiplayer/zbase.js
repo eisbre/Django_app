@@ -21,20 +21,23 @@ class MultiPlayerSocket {
             }
 
             let event = data.event;
-            if(event === "create_player"){
+            if (event === "create_player") {
                 outer.receive_create_player(uid, data.username, data.photo);
             }
-            else if(event === "move_to"){
+            else if (event === "move_to") {
                 outer.receive_move_to(uid, data.tx, data.ty);
             }
-            else if(event === "shoot_fireball"){
+            else if (event === "shoot_fireball") {
                 outer.receive_shoot_fireball(uid, data.tx, data.ty, data.ball_uid);
             }
-            else if(event === "attack"){
+            else if (event === "attack") {
                 outer.receive_attack(uid, data.attackee_uid, data.x, data.y, data.angle, data.damage, data.ball_uid);
             }
-            else if(event === "blink"){
+            else if (event === "blink") {
                 outer.receive_blink(uid, data.tx, data.ty);
+            }
+            else if (event === "message") {
+                outer.receive_message(uid, data.username, data.text);
             }
         }
     }
@@ -149,5 +152,19 @@ class MultiPlayerSocket {
         if(player){
             player.blink(tx, ty);
         }
+    }
+
+    send_message(username, text) {
+        let outer = this;
+        this.ws.send(JSON.stringify({
+            'event': "message",
+            'uid': outer.uid,
+            'username': username,
+            'text': text,
+        }));
+    }
+
+    receive_message(uid, username, text) {
+        this.playground.chat_field.add_message(username, text);
     }
 }
