@@ -23,6 +23,10 @@ class GameObject {
     update(){
     }
 
+    late_update() { //在每一帧最后执行
+        
+    }
+
     on_destroy(){
     }
 
@@ -51,6 +55,11 @@ let GAME_ANIMATION = function(timestamp){
             obj.timedelta = timestamp - last_timestamp;
             obj.update();
         }
+    }
+
+    for (let i = 0; i < GAME_OBJECTS.length; i++) {
+        let obj = GAME_OBJECTS[i];
+        obj.late_update();
     }
 
     last_timestamp = timestamp;

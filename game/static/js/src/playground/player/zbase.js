@@ -105,6 +105,8 @@ class Player extends GameObject {
         });
 
         this.playground.game_map.$canvas.keydown(function (e) {
+            //console.log(e.which);
+            //w 87 e 69
             if (e.which === 13) {
                 if (outer.playground.mode === "multi mode") {
                     outer.playground.chat_field.show_input();
@@ -127,7 +129,7 @@ class Player extends GameObject {
                 outer.cur_skill = "fireball";
                 return false;
             }
-            else if(e.which === 70){
+            else if(e.which === 69){
                 if(outer.blink_coldtime > outer.eps){
                     return true;
                 }
@@ -220,11 +222,19 @@ class Player extends GameObject {
     }
     update(){
         this.spent_time += this.timedelta / 1000;
+        this.update_win();
         if(this.character === "me" && this.playground.state === "fighting"){
             this.update_coldtime();
         }
         this.update_move();
         this.render();
+    }
+
+    update_win() {
+        if (this.playground.state === "fighting" && this.character === "me" && this.playground.players.length === 1) {
+            this.playground.state = "over";
+            this.playground.score_board.win();
+        }
     }
 
     update_coldtime(){
@@ -328,8 +338,11 @@ class Player extends GameObject {
     }
 
     on_destroy(){
-        if(this.character === "me")
+        if (this.playground.state === "fighting" && this.character === "me") {
             this.playground.state = "over";
+            this.playground.score_board.lose();
+        }
+
         for(let i = 0;i < this.playground.players.length;i ++){
             if(this.playground.players[i] === this){
                 this.playground.players.splice(i, 1);

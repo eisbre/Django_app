@@ -15,11 +15,27 @@ class GamePlayground{
         return colors[Math.floor(Math.random()*5)];
     }
 
+    create_uid() {
+        let res = "";
+        for (let i = 0; i < 8; i++) {
+            let x = parseInt(Math.floor(Math.random() * 10));
+            res += x;
+        }
+        return res;
+    }
+
     start(){
         let outer = this;
-        $(window).resize(function(){
+        let uid = this.create_uid();
+        $(window).on(`resize.${uid}`, function(){
             outer.resize();
         });
+
+        if (this.root.AcWingOS) {
+            this.root.AcWingOS.api.window.on_close(function () {
+                $(window).off(`resize.${uid}`);
+            });
+        }
     }
 
     resize(){
@@ -44,6 +60,7 @@ class GamePlayground{
         this.mode = mode;
         this.state = "waiting";
         this.notice_board = new NoticeBoard(this);
+        this.score_board = new ScoreBoard(this);
         this.player_count = 0;
         this.resize();
         this.players = [];
@@ -65,7 +82,28 @@ class GamePlayground{
 
     }
 
-    hide(){
+    hide() {
+        while (this.players && this.players.length > 0) {
+            this.players[0].destroy();
+        }
+
+        if (this.game_map) {
+            this.game_map.destroy();
+            this.game_map = null;
+        }
+
+        if (this.notice_board) {
+            this.notice_board.destroy();
+            this.notice_board = null;
+        }
+
+        if (this.score_board) {
+            this.score_board.destroy();
+            this.score_board = null;
+        }
+
+        this.$playground.empty();
+        
         this.$playground.hide();
     }
 }
