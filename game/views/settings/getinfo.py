@@ -1,31 +1,16 @@
-from django.http import JsonResponse
+from rest_framework.views import APIView  
+from rest_framework.response import Response
 from game.models.player.player import Player
+from rest_framework.permissions import IsAuthenticated
 
-def getinfo(request):
-    platform = request.GET.get('platform')
-    if platform == "ACAPP":
-        return getinfo_acapp(request)
-    elif platform == "WEB":
-        return getinfo_web(request)
+class InfoView(APIView):
+    permission_classes = ([IsAuthenticated])
 
-def getinfo_acapp(request):
-    player = Player.objects.get(user=user)
-    return JsonResponse({
-                'result': "success",
-                'username': player.user.username,
-                'photo': player.photo,
-        })
-
-def getinfo_web(request):
-    user = request.user
-    if not user.is_authenticated:
-        return JsonResponse({
-                    'result': "not login"
-            })
-    else:
+    def get(self, request):
+        user = request.user
         player = Player.objects.get(user=user)
-        return JsonResponse({
-                    'result': "success",
-                    'username': player.user.username,
-                    'photo': player.photo,
-            })
+        return Response({
+            'result': "success",
+            'username': user.username,
+            'photo': player.photo,
+        })

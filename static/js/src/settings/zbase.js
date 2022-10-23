@@ -278,10 +278,44 @@ register.addEventListener('mouseleave', function (e) {
         if(this.platform === "ACAPP"){
             this.getinfo_acapp();
         }
-        else{
-            this.getinfo_web();
+        else {
+            if (this.root.access) {
+                this.getinfo_web();
+                this.refresh_jwt_token();
+            }
+            else {
+                this.login();
+            }
             this.add_listening_events();
         }
+    }
+
+    refresh_jwt_token() {
+        setInterval(() => {
+            $.ajax({
+                url: "https://app2761.acapp.acwing.com.cn/settings/token/refresh/",
+                type: "post",
+                data: {
+                    refresh: this.root.refresh,
+                },
+                success: resp => {
+                    this.root.access = resp.access;
+                }
+            });
+        }, 1000);
+
+        setTimeout(() => {//仅做演示，登录后5秒输出前10排名
+            $.ajax({
+                url: "https://app2761.acapp.acwing.com.cn/settings/ranklist/",
+                type: "get",
+                headers: {
+                    'Authorization': "Bearer " + this.root.access,
+                },
+                success: resp => {
+                    console.log(resp);
+                }
+            });
+        }, 5000);
     }
 
     add_listening_events(){
@@ -335,26 +369,26 @@ register.addEventListener('mouseleave', function (e) {
         this.$register.show();
     }
 
-    login_remote(){
-        let outer = this;
-        let username = this.$login_username.val();
-        let password = this.$login_password.val();
+    login_remote(username, password){
+        username = username || this.$login_username.val();
+        password = password || this.$login_password.val();
         this.$login_error_message.empty();
 
         $.ajax({
-            url: "https://app2761.acapp.acwing.com.cn/settings/login/",
-            type: "GET",
+            url: "https://app2761.acapp.acwing.com.cn/settings/token/",
+            type: "post",
             data:{
                 username: username,
                 password: password,
             },
-            success:function(resp){
-                if(resp.result === "success"){
-                    location.reload();
-                }
-                else{
-                    outer.$login_error_message.html(resp.result);
-                }
+            success: resp => {
+                this.root.access = resp.access;
+                this.root.refresh = resp.refresh;
+                this.getinfo_web();
+                this.refresh_jwt_token();
+            },
+            error: () =>{
+                this.$login_error_message.html("用户名或密码错误");
             }
         });
     }
@@ -367,8 +401,8 @@ register.addEventListener('mouseleave', function (e) {
         this.$register_error_message.empty();
 
         $.ajax({
-            url:"https://app2761.acapp.acwing.com.cn/settings/register",
-            type:"GET",
+            url:"https://app2761.acapp.acwing.com.cn/settings/register/",
+            type:"post",
             data:{
                 username:username,
                 password:password,
@@ -376,7 +410,7 @@ register.addEventListener('mouseleave', function (e) {
             },
             success:function(resp){
                 if(resp.result === "success"){
-                    location.reload();
+                    outer.login_remote(username, password);
                 }
                 else{
                     outer.$register_error_message.html(resp.result);
@@ -390,15 +424,9 @@ logout_remote(){
         this.root.AcWingOS.api.window.close();
     }
     else{
-        $.ajax({
-            url:"https://app2761.acapp.acwing.com.cn/settings/logout/",
-            type:"GET",
-            success: function(resp){
-                if(resp.result === "success"){
-                    location.reload();
-                }
-            }
-        });
+        this.root.access = "";
+        this.root.refresh = "";
+        location.href = "/";
     }
 }
 
@@ -409,6 +437,9 @@ getinfo_web(){
         type: "GET",
         data:{
             platform: outer.platform,
+        },
+        headers: {
+            'Authorization': "Bearer " + this.root.access,
         },
         success: function(resp){
             if(resp.result === "success"){
@@ -445,6 +476,9 @@ acapp_login(appid, redirect_uri, scope, state){
             outer.photo = resp.photo;
             outer.hide();
             outer.root.menu.show();
+            outer.root.access = resp.access;
+            outer.root.refresh = resp.refresh;
+            outer.refresh_jwt_token();
         }
     });
 }
